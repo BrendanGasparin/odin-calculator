@@ -29,28 +29,33 @@ function operate(operator, num1, num2) {
 }
 
 function handleButtons(e) {
-    console.log(e.target.value);
+    const input = document.querySelector('input[type="text"]');
     if (!isNaN(e.target.value)) {
-        document.querySelector('input[type="text"]').value = `${document.querySelector('input[type="text"]').value}${e.target.value}`;
+        input.value = `${input.value}${e.target.value}`;
+        cleanseInput();
     }
     if (e.target.value === '.') {
-        document.querySelector('input[type="text"]').value = `${document.querySelector('input[type="text"]').value}${e.target.value}`;
-        textInput();
+        input.value = `${input.value}${e.target.value}`;
+        cleanseInput();
     }
+    if (e.target.value === 'AC') {
+        input.value = '0';
+    }
+    currentNum = input.value;
 }
 
 function registerButtons(button) {
-    console.log('registering button');
     button.addEventListener('click', handleButtons);
 }
 
-function textInput() {
+function cleanseInput() {
     const input = document.querySelector('input[type="text"]');
     // https://stackoverflow.com/questions/9343751/regex-replacing-multiple-periods-in-floating-number
     input.value = input.value.replace(/[^\d\.]/g, "")
     .replace(/\./, "x")
     .replace(/\./g, "")
-    .replace(/x/, ".");
+    .replace(/x/, ".")
+    .replace(/^0+/, '');    // https://masteringjs.io/tutorials/fundamentals/trim-leading-zeros
 }
 
 const buttons = [...document.querySelectorAll('input[type="button"]')];
@@ -58,5 +63,5 @@ const buttons = [...document.querySelectorAll('input[type="button"]')];
 buttons.forEach(registerButtons);
 
 const input = document.querySelector('input[type="text"]');
-console.log(input);
-input.addEventListener('keyup', textInput);
+input.value = currentNum;
+input.addEventListener('keyup', cleanseInput);
