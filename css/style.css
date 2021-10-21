@@ -29,6 +29,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
     height: 33.3333%;
     width: 100%;
 }
@@ -88,7 +89,7 @@ input[type="button"] {
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
     .calculator {
-        width: 25vw;
+        width: 500px;
         height: 80vh;
         border-radius: 12px;
         border: 5px solid #000000;
