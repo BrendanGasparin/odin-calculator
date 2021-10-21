@@ -31,7 +31,11 @@ function operate(operator, num1, num2) {
 function handleButtons(e) {
     console.log(e.target.value);
     if (!isNaN(e.target.value)) {
-        console.log('Is a number.');
+        document.querySelector('input[type="text"]').value = `${document.querySelector('input[type="text"]').value}${e.target.value}`;
+    }
+    if (e.target.value === '.') {
+        document.querySelector('input[type="text"]').value = `${document.querySelector('input[type="text"]').value}${e.target.value}`;
+        textInput();
     }
 }
 
@@ -41,9 +45,12 @@ function registerButtons(button) {
 }
 
 function textInput() {
-    console.log('Calling textInput()');
     const input = document.querySelector('input[type="text"]');
-    input.value = input.value.replace(/[^0-9.]/, '');
+    // https://stackoverflow.com/questions/9343751/regex-replacing-multiple-periods-in-floating-number
+    input.value = input.value.replace(/[^\d\.]/g, "")
+    .replace(/\./, "x")
+    .replace(/\./g, "")
+    .replace(/x/, ".");
 }
 
 const buttons = [...document.querySelectorAll('input[type="button"]')];
