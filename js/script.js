@@ -28,8 +28,8 @@ function operate(operator, num1, num2) {
     } else if (operator === 'x') {
         return multiply(num1, num2);
     } else if (operator === '÷') {
-        if (num2 === 0) {
-            return 'NO DIV ZERO';
+        if (num2 === '0') {
+            return 'NO DIVIDING BY ZERO';
         }
         return divide(num1, num2);
     }
