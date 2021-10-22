@@ -51,7 +51,6 @@ input[type=text] {
     font-size: 2rem;
     background-color: #CCCCCC;
     padding-right: 12px;
-    border: 1px solid red;
 }
 
 .key-panel {
@@ -76,10 +75,19 @@ input[type="button"] {
     height: 80%;
     width: 80%;
     border-radius: 50%;
+    border: 2px solid black;
     font-size: 2.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+input[type="button"].red-button {
+    background-color: #FF0000;
+}
+
+input[type="button"].green-button {
+    background-color: #00FF00;
 }
 
 /* Extra small devices (phones, 600px and down)
