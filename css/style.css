@@ -12,7 +12,7 @@
 }
 
 .calculator {
-    background-color: #111111;
+    background-color: #222222;
     width: 80vw;
     height: 80vh;
     border-radius: 12px;
@@ -38,7 +38,7 @@
 
 h1 {
     font-size: 1.6rem;
-    color: gray;
+    color: #CCCCCC;
 }
 
 .input-panel {
@@ -58,7 +58,8 @@ input[type=text] {
 
 .key-panel {
     background-color: gray;
-    height: 70%;
+    height: calc(70% - 40px);
+    padding: 20px;
 
     display: grid;
     grid-template-columns: 23% 23% 23% 23%;
@@ -104,6 +105,18 @@ input[type="button"].green-button {
     .calculator {
         width: 500px;
         height: 80vh;
+    }
+
+    h1 {
+        font-size: 2.2rem;
+    }
+
+    input[type=text] {
+        font-size: 2.5rem;
+    }
+
+    input[type="button"] {
+        font-size: 2.4rem;
     }
 }
   
