@@ -29,6 +29,11 @@ function operate(operator, num1, num2) {
         return multiply(num1, num2);
     } else if (operator === '÷') {
         if (num2 === '0') {
+            currentNum = 0;
+            lastNum = 0;
+            currentOperator = '';
+            lastOperator = '';
+
             return 'NO DIVIDING BY ZERO';
         }
         return divide(num1, num2);
