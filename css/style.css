@@ -37,6 +37,7 @@
 }
 
 h1 {
+    font-size: 1.6rem;
     color: gray;
 }
 
@@ -50,7 +51,7 @@ input[type=text] {
     height: 80%;
     width: 90%;
     text-align: right;
-    font-size: 2rem;
+    font-size: 1.8rem;
     background-color: #CCCCCC;
     padding-right: 12px;
 }
@@ -78,7 +79,7 @@ input[type="button"] {
     width: 80%;
     border-radius: 50%;
     border: 2px solid black;
-    font-size: 2rem;
+    font-size: 1.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
