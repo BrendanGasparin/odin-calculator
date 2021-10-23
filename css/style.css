@@ -75,7 +75,6 @@ input[type=text] {
 
 input[type="button"] {
     -webkit-appearance: none;   /* stops iOS from messing up styling */
-    background-color: #FFFFFF;
     height: 80%;
     width: 80%;
     border-radius: 50%;
@@ -84,6 +83,11 @@ input[type="button"] {
     display: flex;
     justify-content: center;
     align-items: center;
+    box-sizing: border-box;
+}
+
+input[type="button"]:active {
+    border: 5px solid black;
 }
 
 input[type="button"].red-button {

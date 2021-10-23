@@ -107,6 +107,9 @@ function cleanseInput() {
     .replace(/\./g, "")
     .replace(/x/, ".")
     .replace(/^0+/, '');    // https://masteringjs.io/tutorials/fundamentals/trim-leading-zeros
+    if(input.value[0] === '.') {
+        input.value = `0${input.value}`;
+    }
 }
 
 const buttons = [...document.querySelectorAll('input[type="button"]')];
