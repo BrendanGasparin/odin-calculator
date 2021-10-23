@@ -46,7 +46,7 @@ function operate(operator, num1, num2) {
 function handleButtons(e) {
     console.log(e.target.value);
     const input = document.querySelector('input[type="text"]');
-    if (!isNaN(e.target.value)) {
+    if (!isNaN(e.target.value) && input.value.length < 16) {
         if(!resetNum) { // if resetNum is false
             input.value = `${input.value}${e.target.value}`; // concatenate digit to the start of the current number
         } else {
@@ -56,7 +56,7 @@ function handleButtons(e) {
         operatorLastPressed = false;
         cleanseInput();
     }
-    if (e.target.value === '.') {
+    if (e.target.value === '.' && input.value.length < 16) {
         input.value = `${input.value}${e.target.value}`;
         operatorLastPressed = false;
         cleanseInput();
@@ -119,6 +119,15 @@ function cleanseInput() {
     if(input.value[0] === '.') {
         input.value = `0${input.value}`;
     }
+    //if(input.value.length > 16) {
+    //    input.value = input.value.substr(0, input.value.length - 1);
+    //}
+}
+
+function keydownCleanse(e) {
+    if(input.value.length >= 16) {
+        e.preventDefault();
+    }
 }
 
 const buttons = [...document.querySelectorAll('input[type="button"]')];
@@ -127,4 +136,5 @@ buttons.forEach(registerButtons);
 
 const input = document.querySelector('input[type="text"]');
 input.value = currentNum;
+input.addEventListener('keydown', keydownCleanse);
 input.addEventListener('keyup', cleanseInput);
