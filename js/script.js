@@ -1,8 +1,8 @@
-let currentNum = document.querySelector('input[type="text"]').value || 0;
-let lastNum = 0;
-let lastOperator = '';
-let currentOperator = '';
-let operatorLastPressed = false;
+let currentNum = document.querySelector('input[type="text"]').value || 0;   // the current number in the input
+let lastNum = 0;        // the last number entered into the input
+let lastOperator = '';  // second-to-last operator used
+let currentOperator = '';   // last operator used
+let operatorLastPressed = false;    // true if the last input was an operator
 let resetNum = false;   // whether or not to reset the number on the next digit keypress
 
 function add(a, b) {
@@ -44,7 +44,6 @@ function operate(operator, num1, num2) {
 }
 
 function handleButtons(e) {
-    console.log(e.target.value);
     const input = document.querySelector('input[type="text"]');
     if (!isNaN(e.target.value) && input.value.length < 16) {
         if(!resetNum) { // if resetNum is false
@@ -81,6 +80,7 @@ function handleButtons(e) {
         } else {
             currentOperator = e.target.value;
             currentNum = operate(lastOperator, lastNum, currentNum);
+            currentNum = formatNumber(currentNum);
             lastNum = currentNum;
             lastOperator = currentOperator;
             input.value = currentNum;
@@ -91,6 +91,7 @@ function handleButtons(e) {
     if (e.target.value === '=') {
         if (lastOperator !== '') {
             currentNum = operate(lastOperator, lastNum, currentNum);
+            currentNum = formatNumber(currentNum);
             lastNum = currentNum;
             lastOperator = '';
             input.value = currentNum;
@@ -99,6 +100,24 @@ function handleButtons(e) {
     }
 
     currentNum = input.value;
+}
+
+function formatNumber(num) {
+    num = String(num);
+    let length = num.length;
+    if(num.includes('.')) {
+        length--;
+    }
+
+    if(num.includes('e')) {
+        let index = num.indexOf('e');
+        let exp = num.substring(index, num.length);
+        console.log(exp.length);
+        length -= exp.length;
+    }
+
+    num = Number(num).toPrecision(length);
+    return num;
 }
 
 function registerButtons(button) {
@@ -115,13 +134,12 @@ function cleanseInput() {
     .replace(/\./, "x")
     .replace(/\./g, "")
     .replace(/x/, ".")
+
     .replace(/^0+/, '');    // https://masteringjs.io/tutorials/fundamentals/trim-leading-zeros
+
     if(input.value[0] === '.') {
         input.value = `0${input.value}`;
     }
-    //if(input.value.length > 16) {
-    //    input.value = input.value.substr(0, input.value.length - 1);
-    //}
 }
 
 function keydownCleanse(e) {
