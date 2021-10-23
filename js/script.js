@@ -2,6 +2,7 @@ let currentNum = document.querySelector('input[type="text"]').value || 0;
 let lastNum = 0;
 let lastOperator = '';
 let currentOperator = '';
+let operatorLastPressed = false;
 let resetNum = false;   // whether or not to reset the number on the next digit keypress
 
 function add(a, b) {
@@ -52,10 +53,12 @@ function handleButtons(e) {
             input.value = e.target.value;   // else make the current digit the current number
             resetNum = false;
         }
+        operatorLastPressed = false;
         cleanseInput();
     }
     if (e.target.value === '.') {
         input.value = `${input.value}${e.target.value}`;
+        operatorLastPressed = false;
         cleanseInput();
     }
     if (e.target.value === 'AC') {
@@ -64,11 +67,16 @@ function handleButtons(e) {
         lastNum = 0;
         currentOperator = '';
         lastOperator = '';
+        operatorLastPressed = false;
     }
     if (e.target.value === '+' || e.target.value === '-' || e.target.value === 'x' || e.target.value === '÷') {
         if (lastOperator === '') {
             lastOperator = e.target.value;
             lastNum = input.value;
+            resetNum = true;
+            operatorLastPressed = true;
+        } else if (operatorLastPressed) {
+            lastOperator = e.target.value;
             resetNum = true;
         } else {
             currentOperator = e.target.value;
@@ -77,6 +85,7 @@ function handleButtons(e) {
             lastOperator = currentOperator;
             input.value = currentNum;
             resetNum = true;
+            operatorLastPressed = true;
         }
     }
     if (e.target.value === '=') {
