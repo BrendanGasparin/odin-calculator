@@ -8,6 +8,7 @@ let operatorLastPressed = false;    // true if the last input was an operator
 let resetNum = false;   // whether or not to reset the number on the next digit keypress
 
 const MAX_INPUT = 16;    // the maximum length of the text field in characters
+const DIV_BY_ZERO = 'NO DIV BY ZERO';
 
 // add two numbers
 function add(a, b) {
@@ -44,7 +45,7 @@ function operate(operator, num1, num2) {
             currentOperator = '';
             lastOperator = '';
 
-            return 'NO DIV ZERO';
+            return DIV_BY_ZERO;
         }
         return divide(num1, num2);
     }
@@ -134,8 +135,9 @@ function handleButtons(e) {
 
 // reformat the number to a certain number of digits
 function formatNumber(num) {
+    if(num === DIV_BY_ZERO) return num;
+
     num = String(num);
-    console.log(num);
     let length = num.length;
 
     if(num.includes('.')) {
