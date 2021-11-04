@@ -43,7 +43,35 @@ function add(a, b) {
 
 // subtract b from a
 function subtract(a, b) {
-    return a - b;
+    a = String(a);
+    b = String(b);
+    if(a.includes('.') || b.includes('.')) {
+        console.log('Calculating magnitude...');
+        let magnitude = 0;
+
+        if(a.includes('.')) {
+            const idx = a.indexOf('.');
+            const length = a.substring(idx, a.length).length - 1;  // minus one to exclude decimal point
+            console.log('Length of a is: ' + length);
+
+            if(length > magnitude) magnitude = length;
+        }
+        if(b.includes('.')) {
+            const idx = b.indexOf('.');
+            const length = b.substring(idx, b.length).length - 1;  // minus one to exclude decimal point
+            console.log('Length of b is: ' + length);
+
+            if(length > magnitude) magnitude = length;
+        }
+
+        console.log('Magnitude: ' + magnitude);
+
+        console.log('Answer is: ' + ((Number(a) * 10 ** magnitude) - (Number(b) * 10 ** magnitude)) / (10 ** magnitude));
+
+        return ((Number(a) * 10 ** magnitude) - (Number(b) * 10 ** magnitude)) / (10 ** magnitude);
+    }
+
+    return Number(a) - Number(b);
 }
 
 // get the product of two numbers
@@ -184,16 +212,14 @@ function formatNumber(num) {
         const sstring = num.substring(0, idx + 1);
         const nonDecimalLength = sstring.length;
         length -= nonDecimalLength;
+    } else if(num.includes('-')) {
+        length--;
     }
 
     if(num.includes('e')) {
         let index = num.indexOf('e');
         let exp = num.substring(index, num.length);
         length -= exp.length;
-    }
-
-    if(num.includes('-')) {
-        length--;
     }
 
     //num = Number(num).toPrecision(length);
