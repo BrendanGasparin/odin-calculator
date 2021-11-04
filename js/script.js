@@ -8,10 +8,36 @@ let operatorLastPressed = false;    // true if the last input was an operator
 let resetNum = false;   // whether or not to reset the number on the next digit keypress
 
 const MAX_INPUT = 16;    // the maximum length of the text field in characters
-const DIV_BY_ZERO = 'NO DIV BY ZERO';
+const DIV_BY_ZERO = 'NO DIV BY ZERO!';
 
 // add two numbers
 function add(a, b) {
+    a = String(a);
+    b = String(b);
+    if(a.includes('.') || b.includes('.')) {
+        console.log('Calculating magnitude...');
+        let magnitude = 0;
+
+        if(a.includes('.')) {
+            const idx = a.indexOf('.');
+            const length = a.substring(idx, a.length).length - 1;  // minus one to exclude decimal point
+            console.log('Length of a is: ' + length);
+
+            if(length > magnitude) magnitude = length;
+        }
+        if(b.includes('.')) {
+            const idx = b.indexOf('.');
+            const length = b.substring(idx, b.length).length - 1;  // minus one to exclude decimal point
+            console.log('Length of b is: ' + length);
+
+            if(length > magnitude) magnitude = length;
+        }
+
+        console.log('Magnitude: ' + magnitude);
+
+        return ((Number(a) * 10 ** magnitude) + (Number(b) * 10 ** magnitude)) / (10 ** magnitude);
+    }
+
     return Number(a) + Number(b);
 }
 
@@ -48,6 +74,7 @@ function operate(operator, num1, num2) {
 
             return DIV_BY_ZERO;
         }
+
         return divide(num1, num2);
     }
 
@@ -145,13 +172,18 @@ function handleButtons(e) {
 
 // reformat the number to a certain number of digits
 function formatNumber(num) {
+    console.log('Number in: ' + num);
     if(num === DIV_BY_ZERO) return num;
 
     num = String(num);
     let length = num.length;
+    console.log('Length in is: ' + length);
 
     if(num.includes('.')) {
-        length--;
+        const idx = num.indexOf('.');
+        const sstring = num.substring(0, idx + 1);
+        const nonDecimalLength = sstring.length;
+        length -= nonDecimalLength;
     }
 
     if(num.includes('e')) {
@@ -164,7 +196,10 @@ function formatNumber(num) {
         length--;
     }
 
-    num = Number(num).toPrecision(length);
+    //num = Number(num).toPrecision(length);
+    num = Number(num).toFixed(length);
+    console.log('Length out is: ' + length);
+    console.log('Number out: ' + num);
     return num;
 }
 
