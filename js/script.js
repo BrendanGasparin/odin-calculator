@@ -40,10 +40,11 @@ function operate(operator, num1, num2) {
         return multiply(num1, num2);
     } else if (operator === '÷') {
         if (num2 === '0') {
-            currentNum = 0;
             lastNum = 0;
             currentOperator = '';
             lastOperator = '';
+            operatorLastPressed = false;
+            resetNum = true;
 
             return DIV_BY_ZERO;
         }
@@ -109,12 +110,14 @@ function handleButtons(e) {
         } else {
             currentOperator = e.target.value;
             currentNum = operate(lastOperator, lastNum, currentNum);
-            currentNum = formatNumber(currentNum);
-            lastNum = currentNum;
-            lastOperator = currentOperator;
+            if(currentNum !== DIV_BY_ZERO) {
+                currentNum = formatNumber(currentNum);
+                lastNum = currentNum;
+                lastOperator = currentOperator;
+                resetNum = true;
+                operatorLastPressed = true;
+            }
             input.value = currentNum;
-            resetNum = true;
-            operatorLastPressed = true;
         }
     }
 
@@ -122,15 +125,22 @@ function handleButtons(e) {
     if (e.target.value === '=') {
         if (lastOperator !== '') {
             currentNum = operate(lastOperator, lastNum, currentNum);
-            currentNum = formatNumber(currentNum);
-            lastNum = currentNum;
-            lastOperator = '';
+            if(currentNum !== DIV_BY_ZERO) {
+                currentNum = formatNumber(currentNum);
+                lastNum = currentNum;
+                lastOperator = '';
+                resetNum = true;
+            }
             input.value = currentNum;
-            resetNum = true;
         }
     }
 
     currentNum = input.value;
+
+    if (currentNum === DIV_BY_ZERO) {
+        currentNum = 0;
+        lastNum = 0;    // Why does this need to be specified? It should have already been set to zero by operate()! :(
+    }
 }
 
 // reformat the number to a certain number of digits
@@ -158,14 +168,10 @@ function formatNumber(num) {
     return num;
 }
 
-function registerButtons(button) {
-    button.addEventListener('click', handleButtons);
-}
-
 // reformat the number in the input window to conform with a calculator's display
 function cleanseInput() {
     const input = document.querySelector('input[type="text"]');
-    if (input.value === 'NO DIV ZERO') return;
+    if (input.value === DIV_BY_ZERO) return;
     if (input.value === '0') return;
     if (input.value === '00') {
         input.value = '0';
@@ -190,6 +196,10 @@ function keydownCleanse(e) {
     if(input.value.length >= 16) {
         e.preventDefault();
     }
+}
+
+function registerButtons(button) {
+    button.addEventListener('click', handleButtons);
 }
 
 const buttons = [...document.querySelectorAll('input[type="button"]')];
