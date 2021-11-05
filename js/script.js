@@ -76,7 +76,37 @@ function subtract(a, b) {
 
 // get the product of two numbers
 function multiply(a, b) {
-    return a * b;
+    a = String(a);
+    b = String(b);
+    if(a.includes('.') || b.includes('.')) {
+        console.log('Calculating magnitude...');
+        let magnitude = 0;
+
+        if(a.includes('.')) {
+            const idx = a.indexOf('.');
+            const length = a.substring(idx, a.length).length - 1;  // minus one to exclude decimal point
+            console.log('Length of a is: ' + length);
+
+            if(length > magnitude) magnitude = length;
+        }
+        if(b.includes('.')) {
+            const idx = b.indexOf('.');
+            const length = b.substring(idx, b.length).length - 1;  // minus one to exclude decimal point
+            console.log('Length of b is: ' + length);
+
+            if(length > magnitude) magnitude = length;
+        }
+
+        console.log('Magnitude: ' + magnitude);
+        console.log('Num 1 is: ' + Number(a) * 10 ** magnitude);
+        console.log('Num 2 is: ' + Number(b) * 10 ** magnitude);
+
+        console.log('Answer is ' + ((Number(a) * 10 ** magnitude) * (Number(b) * 10 ** magnitude)) / (10 ** magnitude * 2));
+
+        return ((Number(a) * 10 ** magnitude) * (Number(b) * (10 ** magnitude))) / (10 ** (magnitude * 2));
+    }
+
+    return Number(a) * Number(b);
 }
 
 // divide a by b
