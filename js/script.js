@@ -8,33 +8,29 @@ let operatorLastPressed = false;    // true if the last input was an operator
 let resetNum = false;   // whether or not to reset the number on the next digit keypress
 
 const MAX_INPUT = 16;    // the maximum length of the text field in characters
-const DIV_BY_ZERO = 'NO DIV BY ZERO!';
+const DIV_BY_ZERO = 'NO DIV BY ZERO!';  // the message to display when a user divides by zero
 
 // add two numbers
 function add(a, b) {
     a = String(a);
     b = String(b);
     if(a.includes('.') || b.includes('.')) {
-        console.log('Calculating magnitude...');
         let magnitude = 0;
 
         if(a.includes('.')) {
             const idx = a.indexOf('.');
             const length = a.substring(idx, a.length).length - 1;  // minus one to exclude decimal point
-            console.log('Length of a is: ' + length);
 
             if(length > magnitude) magnitude = length;
         }
         if(b.includes('.')) {
             const idx = b.indexOf('.');
             const length = b.substring(idx, b.length).length - 1;  // minus one to exclude decimal point
-            console.log('Length of b is: ' + length);
 
             if(length > magnitude) magnitude = length;
         }
 
-        console.log('Magnitude: ' + magnitude);
-
+        // deal with FP imprecision by multiplying both numbers into integers before summing them and dividing the result
         return ((Number(a) * 10 ** magnitude) + (Number(b) * 10 ** magnitude)) / (10 ** magnitude);
     }
 
@@ -46,28 +42,22 @@ function subtract(a, b) {
     a = String(a);
     b = String(b);
     if(a.includes('.') || b.includes('.')) {
-        console.log('Calculating magnitude...');
         let magnitude = 0;
 
         if(a.includes('.')) {
             const idx = a.indexOf('.');
             const length = a.substring(idx, a.length).length - 1;  // minus one to exclude decimal point
-            console.log('Length of a is: ' + length);
 
             if(length > magnitude) magnitude = length;
         }
         if(b.includes('.')) {
             const idx = b.indexOf('.');
             const length = b.substring(idx, b.length).length - 1;  // minus one to exclude decimal point
-            console.log('Length of b is: ' + length);
 
             if(length > magnitude) magnitude = length;
         }
 
-        console.log('Magnitude: ' + magnitude);
-
-        console.log('Answer is: ' + ((Number(a) * 10 ** magnitude) - (Number(b) * 10 ** magnitude)) / (10 ** magnitude));
-
+        // deal with FP imprecision by multiplying both numbers into integers before subtracting and diving the result
         return ((Number(a) * 10 ** magnitude) - (Number(b) * 10 ** magnitude)) / (10 ** magnitude);
     }
 
@@ -79,30 +69,22 @@ function multiply(a, b) {
     a = String(a);
     b = String(b);
     if(a.includes('.') || b.includes('.')) {
-        console.log('Calculating magnitude...');
         let magnitude = 0;
 
         if(a.includes('.')) {
             const idx = a.indexOf('.');
             const length = a.substring(idx, a.length).length - 1;  // minus one to exclude decimal point
-            console.log('Length of a is: ' + length);
 
             if(length > magnitude) magnitude = length;
         }
         if(b.includes('.')) {
             const idx = b.indexOf('.');
             const length = b.substring(idx, b.length).length - 1;  // minus one to exclude decimal point
-            console.log('Length of b is: ' + length);
 
             if(length > magnitude) magnitude = length;
         }
 
-        console.log('Magnitude: ' + magnitude);
-        console.log('Num 1 is: ' + Number(a) * 10 ** magnitude);
-        console.log('Num 2 is: ' + Number(b) * 10 ** magnitude);
-
-        console.log('Answer is ' + ((Number(a) * 10 ** magnitude) * (Number(b) * 10 ** magnitude)) / (10 ** magnitude * 2));
-
+        // deal with FP imprecision by multiplying both numbers into integers, getting the product, and then dividing the result
         return ((Number(a) * 10 ** magnitude) * (Number(b) * (10 ** magnitude))) / (10 ** (magnitude * 2));
     }
 
@@ -111,7 +93,29 @@ function multiply(a, b) {
 
 // divide a by b
 function divide(a, b) {
-    return (a / b);
+    a = String(a);
+    b = String(b);
+    if(a.includes('.') || b.includes('.')) {
+        let magnitude = 0;
+
+        if(a.includes('.')) {
+            const idx = a.indexOf('.');
+            const length = a.substring(idx, a.length).length - 1;  // minus one to exclude decimal point
+
+            if(length > magnitude) magnitude = length;
+        }
+        if(b.includes('.')) {
+            const idx = b.indexOf('.');
+            const length = b.substring(idx, b.length).length - 1;  // minus one to exclude decimal point
+
+            if(length > magnitude) magnitude = length;
+        }
+
+        // deal with FP imprecision by multiplying everything into an integer before dividing
+        return ((Number(a) * 10 ** magnitude) / (Number(b) * (10 ** magnitude)));
+    }
+
+    return Number(a) / Number(b);
 }
 
 // perform an operation
@@ -154,7 +158,7 @@ function handleButtons(e) {
     }
 
     // handle number presses
-    if (!isNaN(e.target.value) && input.value.length < MAX_INPUT) {    // if key is a number and input length is less than 16
+    if (!isNaN(e.target.value) && (input.value.length < MAX_INPUT || operatorLastPressed)) {    // if key is a number and input length is less than 16
         if(!resetNum) { // if resetNum is false
             input.value = `${input.value}${e.target.value}`; // concatenate digit to the start of the current number
         } else {
@@ -230,32 +234,32 @@ function handleButtons(e) {
 
 // reformat the number to a certain number of digits
 function formatNumber(num) {
-    console.log('Number in: ' + num);
     if(num === DIV_BY_ZERO) return num;
 
-    num = String(num);
-    let length = num.length;
-    console.log('Length in is: ' + length);
-
-    if(num.includes('.')) {
-        const idx = num.indexOf('.');
-        const sstring = num.substring(0, idx + 1);
-        const nonDecimalLength = sstring.length;
-        length -= nonDecimalLength;
-    } else if(num.includes('-')) {
-        length--;
+    // if number overflows text input then convert it to scientific notation
+    if (num >= 10000000000000000) {
+        num = num.toExponential();
     }
 
-    if(num.includes('e')) {
-        let index = num.indexOf('e');
-        let exp = num.substring(index, num.length);
-        length -= exp.length;
+    const totalLength = String(num).length;
+    let extraChars = 0;
+
+    // remember how many special characters there are
+    if (String(num).includes('+')) extraChars++;
+    if (String(num).includes('-')) extraChars++;
+    if (String(num).includes('.')) extraChars++;
+    if (String(num).includes('e')) {
+        extraChars++;
+        const expNum = String(num).substring(String(num).indexOf('e'), String(num).length);
+        extraChars += (expNum.length - 2); // -2 to ignore the e and the + or - sign we have already counted
     }
 
-    //num = Number(num).toPrecision(length);
-    num = Number(num).toFixed(length);
-    console.log('Length out is: ' + length);
-    console.log('Number out: ' + num);
+    // if the input is overflowing the length then reduce the precision of the number by an appropriate amount
+    if (totalLength > MAX_INPUT) {
+        const precision = MAX_INPUT - extraChars;
+        num = Number(num).toPrecision(precision);
+    }
+
     return num;
 }
 
