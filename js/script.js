@@ -274,7 +274,7 @@ function formatNumber(num) {
             }
         }
     } else if (String(num).includes('.') && String(num).length - 1 === '0') {
-        // TODO:    if number has trailing zeroes at the end of it, after a decimal point, but is not scientific notation, then remove these zeroes and if necessary the decimal point
+        // if number has trailing zeroes at the end of it, after a decimal point, but is not scientific notation, then remove these zeroes and if necessary the decimal point
         while(String(num)[String(num).length - 1] === '0' || String(num)[String(num).length - 1] === '.') {
             num = num.substring(0, num.length - 1);
         }
