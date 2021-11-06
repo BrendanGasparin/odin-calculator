@@ -273,6 +273,11 @@ function formatNumber(num) {
                 num = num.slice(0, String(num).indexOf('e') - 1) + '' + num.slice(String(num).indexOf('e'), String(num).length);
             }
         }
+    } else if (String(num).includes('.') && String(num).length - 1 === '0') {
+        // TODO:    if number has trailing zeroes at the end of it, after a decimal point, but is not scientific notation, then remove these zeroes and if necessary the decimal point
+        while(String(num)[String(num).length - 1] === '0' || String(num)[String(num).length - 1] === '.') {
+            num = num.substring(0, num.length - 1);
+        }
     }
 
     return num;
