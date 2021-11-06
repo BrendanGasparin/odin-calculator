@@ -127,7 +127,7 @@ function operate(operator, num1, num2) {
     } else if (operator === 'x') {
         return multiply(num1, num2);
     } else if (operator === '÷') {
-        if (num2 === '0') {
+        if (Number(num2) === 0) {
             lastNum = 0;
             currentOperator = '';
             lastOperator = '';
@@ -151,6 +151,8 @@ function handleButtons(e) {
     if(e.target.value === '⌫') {
         if (input.value === '0') return;
         if (input.value.length === 1 || (input.value.length === 2 && input.value[0] === '-')) {
+            input.value = '0';
+        } else if (input.value === DIV_BY_ZERO) {
             input.value = '0';
         } else {
             input.value = input.value.substring(0, input.value.length - 1);
@@ -212,7 +214,7 @@ function handleButtons(e) {
 
     // handle equal button presses
     if (e.target.value === '=') {
-        if (lastOperator !== '') {
+        if (lastOperator !== '' /* && !operatorLastPressed */) {    // !operartorLastPressed stops operand and equals from applying again and again, but the iPhone calculator actually allows this
             currentNum = operate(lastOperator, lastNum, currentNum);
             if(currentNum !== DIV_BY_ZERO) {
                 currentNum = formatNumber(currentNum);
@@ -237,7 +239,7 @@ function formatNumber(num) {
     if(num === DIV_BY_ZERO) return num;
 
     // if number overflows text input then convert it to scientific notation
-    if (num >= 10000000000000000) {
+    if (num >= 10000000000000000 || num < -999999999999999) {
         num = num.toExponential();
     }
 
