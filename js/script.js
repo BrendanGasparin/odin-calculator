@@ -262,6 +262,19 @@ function formatNumber(num) {
         num = Number(num).toPrecision(precision);
     }
 
+    // if number is scientific notation and contains 0s immediately preceding e but after a decimal point
+    // trim the zeros (and if necessary the decimal point)
+    if (String(num).includes('e') && String(num).includes('.')) {
+        const eIndex = String(num).indexOf('e');
+        const dotIndex = String(num).indexOf('.');
+
+        if (eIndex > dotIndex && String(num)[eIndex - 1] === '0') {
+            while(String(num)[String(num).indexOf('e') - 1] === '0' || String(num)[String(num).indexOf('e') - 1] === '.') {
+                num = num.slice(0, String(num).indexOf('e') - 1) + '' + num.slice(String(num).indexOf('e'), String(num).length);
+            }
+        }
+    }
+
     return num;
 }
 
